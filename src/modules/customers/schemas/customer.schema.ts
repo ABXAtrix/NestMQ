@@ -1,8 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
 
-export const INDICATION_EXCHANGE = 'indication.exchange';
-export const INDICATION_ROUTING_KEY = 'customer.indicated';
+export const INDICATION_EXCHANGE = 'customer.indication.created';
+export const INDICATION_ROUTING_KEY = 'customer.indication.created';
 export const INDICATION_EXCHAGE = INDICATION_EXCHANGE;
 
 export interface IndicationEvent {

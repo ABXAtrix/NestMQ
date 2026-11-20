@@ -33,8 +33,8 @@ describe('ReportsController', () => {
   describe('findAll', () => {
     it('should call reportsService.findAll and return reports list', async () => {
       const mockReports = [
-        { customerId: '64b8f0c2e1f2a3b4c5d6e7f8', totalIndications: 3 },
-        { customerId: '64b8f0c2e1f2a3b4c5d6e7f9', totalIndications: 1 },
+        { customer_id: '64b8f0c2e1f2a3b4c5d6e7f8', total_indications: 3 },
+        { customer_id: '64b8f0c2e1f2a3b4c5d6e7f9', total_indications: 1 },
       ];
       mockReportsService.findAll.mockResolvedValue(mockReports);
 
