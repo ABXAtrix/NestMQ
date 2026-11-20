@@ -11,15 +11,15 @@ export class ReportsRepository {
 
   incrementTotal(customerId: string) {
     return this.model.updateOne(
-      { customerId: customerId },
-      { $inc: { totalIndications: 1 } },
+      { customer_id: customerId },
+      { $inc: { total_indications: 1 } },
       { upsert: true },
     );
   }
 
   findAll() {
     return this.model
-      .find({}, { _id: 0, customerId: 1, totalIndications: 1 })
+      .find({}, { _id: 0, customer_id: 1, total_indications: 1 })
       .lean();
   }
 }

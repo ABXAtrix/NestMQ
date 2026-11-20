@@ -19,10 +19,10 @@ export class IndicationConsumer implements OnModuleInit {
       this.configService.get<string>('rabbitmq.queue') ?? 'customers_queue';
     const exchange =
       this.configService.get<string>('rabbitmq.exchange') ??
-      'indication.exchange';
+      'customer.indication.created';
     const routingKey =
       this.configService.get<string>('rabbitmq.routingKey') ??
-      'customer.indicated';
+      'customer.indication.created';
 
     await this.rabbitMQService.consume(
       queue,
