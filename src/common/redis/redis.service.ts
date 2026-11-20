@@ -1,24 +1,72 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  OnModuleDestroy,
+  OnModuleInit,
+  Optional,
+} from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import Redis from 'ioredis';
 
 @Injectable()
-export class RedisService {
-  private readonly store = new Map<string, string>();
+export class RedisService implements OnModuleInit, OnModuleDestroy {
+  private readonly logger = new Logger(RedisService.name);
+  private client!: Redis;
 
-  exists(key: string): Promise<boolean> {
-    return Promise.resolve(this.store.has(key));
+  constructor(
+    @Optional()
+    private readonly configService?: ConfigService,
+  ) {}
+
+  onModuleInit() {
+    const url =
+      this.configService?.get<string>('redis.url') ??
+      process.env.REDIS_URL ??
+      'redis://localhost:6379';
+
+    this.client = new Redis(url, {
+      lazyConnect: true,
+      maxRetriesPerRequest: 1,
+    });
+
+    this.client.on('error', (err) => {
+      this.logger.error(`Redis connection error: ${err.message}`);
+    });
+
+    this.client
+      .connect()
+      .then(() => {
+        this.logger.log('Connected to Redis');
+      })
+      .catch((err: Error) => {
+        this.logger.warn(`Could not connect to Redis: ${err.message}`);
+      });
   }
 
-  get(key: string): Promise<string | null> {
-    return Promise.resolve(this.store.get(key) ?? null);
+  async exists(key: string): Promise<boolean> {
+    const result = await this.client.exists(key);
+    return result === 1;
   }
 
-  set(key: string, value: string): Promise<void> {
-    this.store.set(key, value);
-    return Promise.resolve();
+  async get(key: string): Promise<string | null> {
+    return this.client.get(key);
   }
 
-  del(key: string): Promise<void> {
-    this.store.delete(key);
-    return Promise.resolve();
+  async set(key: string, value: string, ttlSeconds?: number): Promise<void> {
+    if (ttlSeconds) {
+      await this.client.set(key, value, 'EX', ttlSeconds);
+    } else {
+      await this.client.set(key, value);
+    }
+  }
+
+  async del(key: string): Promise<void> {
+    await this.client.del(key);
+  }
+
+  async onModuleDestroy() {
+    if (this.client) {
+      await this.client.quit();
+    }
   }
 }
