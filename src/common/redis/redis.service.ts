@@ -27,10 +27,11 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     this.client = new Redis(url, {
       lazyConnect: true,
       maxRetriesPerRequest: 1,
+      enableOfflineQueue: false,
     });
 
     this.client.on('error', (err) => {
-      this.logger.error(`Redis connection error: ${err.message}`);
+      this.logger.warn(`Redis connection error: ${err.message}`);
     });
 
     this.client
@@ -66,7 +67,11 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
 
   async onModuleDestroy() {
     if (this.client) {
-      await this.client.quit();
+      try {
+        await this.client.quit();
+      } catch {
+        this.client.disconnect();
+      }
     }
   }
 }
