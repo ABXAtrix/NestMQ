@@ -58,12 +58,12 @@ describe('ReportsController (e2e)', () => {
     it('should return 200 and list of reports', async () => {
       const mockReports = [
         {
-          customerId: '64b8f0c2e1f2a3b4c5d6e700',
-          totalIndications: 3,
+          customer_id: '64b8f0c2e1f2a3b4c5d6e700',
+          total_indications: 3,
         },
         {
-          customerId: '64b8f0c2e1f2a3b4c5d6e701',
-          totalIndications: 1,
+          customer_id: '64b8f0c2e1f2a3b4c5d6e701',
+          total_indications: 1,
         },
       ];
       mockReportsRepository.findAll.mockResolvedValue(mockReports);

@@ -22,8 +22,8 @@ describe('IndicationConsumer', () => {
     get: jest.fn((key: string) => {
       const configMap: Record<string, string> = {
         'rabbitmq.queue': 'customers_queue',
-        'rabbitmq.exchange': 'indication.exchange',
-        'rabbitmq.routingKey': 'customer.indicated',
+        'rabbitmq.exchange': 'customer.indication.created',
+        'rabbitmq.routingKey': 'customer.indication.created',
       };
       return configMap[key];
     }),
@@ -78,8 +78,8 @@ describe('IndicationConsumer', () => {
 
       expect(rabbitMQService.consume).toHaveBeenCalledWith(
         'customers_queue',
-        'indication.exchange',
-        'customer.indicated',
+        'customer.indication.created',
+        'customer.indication.created',
         expect.any(Function),
       );
 

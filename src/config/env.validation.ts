@@ -37,11 +37,11 @@ export class EnvironmentVariables {
 
   @IsString()
   @IsOptional()
-  RABBITMQ_EXCHANGE: string = 'indication.exchange';
+  RABBITMQ_EXCHANGE: string = 'customer.indication.created';
 
   @IsString()
   @IsOptional()
-  RABBITMQ_ROUTING_KEY: string = 'customer.indicated';
+  RABBITMQ_ROUTING_KEY: string = 'customer.indication.created';
 
   @IsString()
   @IsOptional()

@@ -35,7 +35,7 @@ describe('ReportsRepository', () => {
   });
 
   describe('incrementTotal', () => {
-    it('should call model.updateOne with customerId, $inc and upsert', async () => {
+    it('should call model.updateOne with customer_id, $inc and upsert', async () => {
       const customerId = '64b8f0c2e1f2a3b4c5d6e700';
       const updateResult = { acknowledged: true, modifiedCount: 1 };
       mockUpdateOne.mockResolvedValue(updateResult);
@@ -43,8 +43,8 @@ describe('ReportsRepository', () => {
       const result = await repository.incrementTotal(customerId);
 
       expect(mockUpdateOne).toHaveBeenCalledWith(
-        { customerId },
-        { $inc: { totalIndications: 1 } },
+        { customer_id: customerId },
+        { $inc: { total_indications: 1 } },
         { upsert: true },
       );
       expect(result).toEqual(updateResult);
@@ -54,7 +54,7 @@ describe('ReportsRepository', () => {
   describe('findAll', () => {
     it('should call model.find and return lean projection', async () => {
       const mockReports = [
-        { customerId: '64b8f0c2e1f2a3b4c5d6e700', totalIndications: 4 },
+        { customer_id: '64b8f0c2e1f2a3b4c5d6e700', total_indications: 4 },
       ];
       mockLean.mockResolvedValue(mockReports);
 
@@ -62,7 +62,7 @@ describe('ReportsRepository', () => {
 
       expect(mockFind).toHaveBeenCalledWith(
         {},
-        { _id: 0, customerId: 1, totalIndications: 1 },
+        { _id: 0, customer_id: 1, total_indications: 1 },
       );
       expect(result).toEqual(mockReports);
     });

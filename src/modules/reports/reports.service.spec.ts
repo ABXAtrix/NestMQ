@@ -57,7 +57,7 @@ describe('ReportsService', () => {
       await service.registerIndication(event);
 
       expect(redisService.get).toHaveBeenCalledWith(
-        `customer:${event.customer_id}`,
+        `indication:${event.customer_id}`,
       );
       expect(redisService.set).not.toHaveBeenCalled();
       expect(repository.incrementTotal).not.toHaveBeenCalled();
@@ -72,10 +72,10 @@ describe('ReportsService', () => {
       await service.registerIndication(event);
 
       expect(redisService.get).toHaveBeenCalledWith(
-        `customer:${event.customer_id}`,
+        `indication:${event.customer_id}`,
       );
       expect(redisService.set).toHaveBeenCalledWith(
-        `customer:${event.customer_id}`,
+        `indication:${event.customer_id}`,
         '1',
         86400,
       );
@@ -92,7 +92,7 @@ describe('ReportsService', () => {
       await expect(service.registerIndication(event)).rejects.toThrow(dbError);
 
       expect(redisService.del).toHaveBeenCalledWith(
-        `customer:${event.customer_id}`,
+        `indication:${event.customer_id}`,
       );
     });
   });

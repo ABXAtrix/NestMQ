@@ -13,7 +13,8 @@ export class ReportsService {
   ) {}
 
   async registerIndication(event: IndicationEvent) {
-    const first = await this.redisService.get(`customer:${event.customer_id}`);
+    const indicationKey = `indication:${event.customer_id}`;
+    const first = await this.redisService.get(indicationKey);
     if (first) {
       this.logger.log(
         JSON.stringify({
@@ -24,12 +25,12 @@ export class ReportsService {
       return;
     }
 
-    await this.redisService.set(`customer:${event.customer_id}`, '1', 86400);
+    await this.redisService.set(indicationKey, '1', 86400);
 
     try {
       await this.reportsRepository.incrementTotal(event.parent_customer_id);
     } catch (error) {
-      await this.redisService.del(`customer:${event.customer_id}`);
+      await this.redisService.del(indicationKey);
       throw error;
     }
 
